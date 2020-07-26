@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group 'io.github.kutify'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.12'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+    
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.2'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.6.2'
+    testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.16.1'
+}

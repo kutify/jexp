@@ -1,0 +1,63 @@
+package io.github.kutify.math.exception;
+
+import lombok.Getter;
+
+import java.util.Collection;
+import java.util.Collections;
+
+@Getter
+public class ExpressionSyntaxException extends RuntimeException {
+
+    private final String expression;
+    private final Collection<ExpressionSyntaxErrorItem> errorItems;
+
+    public ExpressionSyntaxException(String expression, Collection<ExpressionSyntaxErrorItem> errorItems) {
+        super(expression == null ? null : buildMessage(expression, errorItems));
+        this.expression = expression;
+        this.errorItems = errorItems;
+    }
+
+    public ExpressionSyntaxException(String expression, ExpressionSyntaxErrorType errorType, int position) {
+        this(expression, Collections.singletonList(
+                new ExpressionSyntaxErrorItem(errorType, position)
+        ));
+    }
+
+    private static String buildMessage(String expression, Collection<ExpressionSyntaxErrorItem> errorItems) {
+        StringBuilder sb = new StringBuilder("Expression \"");
+        sb.append(expression);
+        sb.append("\" contains following errors:");
+        for (ExpressionSyntaxErrorItem item : errorItems) {
+            sb.append(' ');
+            sb.append(item.getErrorType().getName());
+            int position = item.getPosition();
+            if (position > -1 && position < expression.length()) {
+                sb.append(" at '");
+                sb.append(expression.charAt(position));
+                sb.append("' (pos. ");
+                sb.append(position);
+                sb.append(")");
+            }
+            sb.append(';');
+        }
+        int length = sb.length();
+        sb.replace(length - 1, length, ".");
+        return sb.toString();
+    }
+
+//    public ExpressionSyntaxException() {
+//        super();
+//    }
+//
+//    public ExpressionSyntaxException(String message, Throwable throwable) {
+//        super(message, throwable);
+//    }
+//
+//    public ExpressionSyntaxException(String message) {
+//        super(message);
+//    }
+//
+//    public ExpressionSyntaxException(Throwable throwable) {
+//        super(throwable);
+//    }
+}
