@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class Arguments {
 
+    public static final Arguments EMPTY = Arguments.builder().build();
+
     private final HashMap<String, BigRational> arguments;
 
     private Arguments(Map<String, BigRational> arguments) {
