@@ -1,13 +1,13 @@
 # Math expressions tool
 
-The library enables you to write math expressions in convenient way and evaluate them using variables.
+The library enables you to write math expressions in a convenient way and evaluate them using variables.
 
-Let's start with simple example:
+Let's start with a simple example:
 ```
     Expression exp = Expression.compile("1 + 1");
     System.out.println(exp.calculate(Arguments.EMPTY)); // -> 2
 ```
-And more sophisticated example:
+And a more sophisticated example:
 ```
     double d = 2.0/3 - 1 + 1.0/3;
     System.out.println(d); // -> -5.551115123125783E-17 (Almost zero, but not zero)
@@ -16,14 +16,14 @@ And more sophisticated example:
     System.out.println(expression.calculate(Arguments.EMPTY)); // -> 0 (Exactly zero!)
 ```
 As you can see, using ```Expression``` we can do precise math calculations.
-It is possible because it process numbers using special class ```BigRational```
+It is possible because it processes numbers using the special class ```BigRational```
 that represents fractions. So, the result of calculation is a ```BigRational``` number too:
 ```
     BigRational number = Expression.compile("5/7 + 7/5").calculate(Arguments.EMPTY);
     System.out.println(number); // -> 74/35
 ```
-Likely you noticed that method ```calculate()``` accepts a single argument.
-It's purpose is to provide calculation with values if your expression contains some variables.
+Likely you noticed that the method ```calculate()``` accepts a single argument.
+Its purpose is to provide calculation with values if your expression contains some variables.
 Actually, in most cases you should use variables.
 Variable values can be specified in different types.
 Have a look at the example below:
@@ -38,14 +38,14 @@ Have a look at the example below:
         );
     System.out.println(totalDistance); // -> 175
 ```
-And some words about performance.
-All costly things like string parsing take place inside ```compile()``` method.
+And, some words about performance.
+All costly things like string parsing take place inside the ```compile()``` method.
 So, compiled expression is literally a function that takes the arguments and does math operations.
-We can explain it using pseudo code:
+We can explain it using the following pseudo code:
 ```
     Expression expression = Expression.compile("a ^ 2");
     
-    // Under the hood expression has:
+    // Under the hood the expression has:
     Function<BigRational, BigRational> func = a -> Math.pow(a, 2);
 ```
 So, for the sake of performance, you can use ```Expression``` as a static field.
