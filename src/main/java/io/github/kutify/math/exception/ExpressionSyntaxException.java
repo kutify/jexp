@@ -44,20 +44,4 @@ public class ExpressionSyntaxException extends RuntimeException {
         sb.replace(length - 1, length, ".");
         return sb.toString();
     }
-
-//    public ExpressionSyntaxException() {
-//        super();
-//    }
-//
-//    public ExpressionSyntaxException(String message, Throwable throwable) {
-//        super(message, throwable);
-//    }
-//
-//    public ExpressionSyntaxException(String message) {
-//        super(message);
-//    }
-//
-//    public ExpressionSyntaxException(Throwable throwable) {
-//        super(throwable);
-//    }
 }

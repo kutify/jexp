@@ -79,7 +79,8 @@ public abstract class Parser {
                                 result.add(topOperator);
                             }
                         } catch (NoSuchElementException ex) {
-                            throw new ExpressionSyntaxException(null, ExpressionSyntaxErrorType.NO_OPENING_PARENTHESIS, token.getPosition());
+                            throw new ExpressionSyntaxException(null, ExpressionSyntaxErrorType.NO_OPENING_PARENTHESIS,
+                                    token.getPosition());
                         }
                     }
                 }
@@ -92,7 +93,8 @@ public abstract class Parser {
         while (!operators.isEmpty()) {
             Token operator = operators.pop();
             if (operator.getType() == TokenType.PARENTHESIS) {
-                throw new ExpressionSyntaxException(null, ExpressionSyntaxErrorType.NO_CLOSING_PARENTHESIS, operator.getPosition());
+                throw new ExpressionSyntaxException(null, ExpressionSyntaxErrorType.NO_CLOSING_PARENTHESIS,
+                        operator.getPosition());
             }
             result.add(operator);
         }
