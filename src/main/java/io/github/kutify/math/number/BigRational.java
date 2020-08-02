@@ -102,14 +102,47 @@ public class BigRational extends Number implements Comparable<BigRational> {
         }
     }
 
+    public BigRational pow(BigRational exponent) {
+        try {
+            return pow(exponent.intValueExact());
+        } catch (ArithmeticException ex) {
+            return BigRational.valueOf(
+                    new BigDecimal(
+                            Math.pow(doubleValue(),exponent.doubleValue())
+                    ).setScale(16, BigDecimal.ROUND_HALF_UP)
+            );
+
+        }
+    }
+
+    public boolean isInteger() {
+        return denominator.compareTo(BigInteger.ONE) == 0;
+    }
+
     @Override
     public int intValue() {
         return numerator.divide(denominator).intValue();
     }
 
+    public int intValueExact() {
+        if (isInteger()) {
+            return numerator.divide(denominator).intValueExact();
+        } else {
+            throw new ArithmeticException("Value " + this + " is fractional");
+        }
+    }
+
     @Override
     public long longValue() {
         return numerator.divide(denominator).longValue();
+    }
+
+    public long longValueExact() {
+        if (isInteger()) {
+            return numerator.divide(denominator).longValueExact();
+        } else {
+            throw new ArithmeticException("Value " + this + " is fractional");
+        }
     }
 
     @Override

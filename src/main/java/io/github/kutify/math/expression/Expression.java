@@ -64,7 +64,7 @@ public class Expression {
             } else if (operation == Operation.DIVIDE) {
                 return varValues -> leftFunc.apply(varValues).divide(rightFunc.apply(varValues));
             } else if (operation == Operation.POWER) {
-                return varValues -> leftFunc.apply(varValues).pow(rightFunc.apply(varValues).intValue());
+                return varValues -> leftFunc.apply(varValues).pow(rightFunc.apply(varValues));
             } else {
                 throw new RuntimeException();
             }
