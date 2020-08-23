@@ -102,7 +102,7 @@ public abstract class Parser {
         return result;
     }
 
-    public static List<Token> parse(String expression) {
+    public static List<Token> parseTokens(String expression) {
         char[] chars = expression.toCharArray();
         List<Token> tokens = new LinkedList<>();
 

@@ -18,7 +18,7 @@ class SerializerTest {
         for (String input : inputs) {
             assertEquals(expected,
                     Serializer.serialize(
-                            Parser.parse(input)
+                            Parser.parseTokens(input)
                     ),
                     "Wrong result for '" + input + "'"
             );
