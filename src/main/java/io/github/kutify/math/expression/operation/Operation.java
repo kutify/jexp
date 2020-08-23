@@ -7,5 +7,6 @@ public enum Operation {
     DIVIDE,
     POWER,
     VALUE,
-    VAR
+    VAR,
+    FUNCTION
 }
