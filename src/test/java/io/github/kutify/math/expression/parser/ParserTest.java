@@ -22,7 +22,7 @@ class ParserTest {
     @MethodSource("getTestData")
     void test(int index, List<Token> expectedTokens, List<String> inputs) {
         for (String input : inputs) {
-            List<Token> parsedTokens = Parser.parse(input);
+            List<Token> parsedTokens = Parser.parseTokens(input);
             int expectedSize = expectedTokens.size();
             assertEquals(expectedSize, parsedTokens.size());
             for (int i = 0; i < expectedSize; i++) {

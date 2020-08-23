@@ -19,7 +19,7 @@ class InfixToPostfixTest {
             assertEquals(expected,
                     Serializer.serialize(
                             Parser.infixToPostfix(
-                                    Parser.parse(input)
+                                    Parser.parseTokens(input)
                             )
                     ),
                     "Wrong result for '" + input + "'"
