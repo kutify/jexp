@@ -3,5 +3,7 @@ package io.github.kutify.math.expression.parser.token;
 public enum TokenType {
     OPERAND,
     OPERATOR,
-    PARENTHESIS
+    PARENTHESIS,
+    COMMA,
+    FUNCTION_TOKEN_WRAPPER
 }

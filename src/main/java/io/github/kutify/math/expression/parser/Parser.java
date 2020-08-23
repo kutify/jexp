@@ -1,6 +1,8 @@
 package io.github.kutify.math.expression.parser;
 
 import io.github.kutify.math.exception.ExpressionSyntaxException;
+import io.github.kutify.math.expression.parser.token.CommaToken;
+import io.github.kutify.math.expression.parser.token.FunctionTokensWrapper;
 import io.github.kutify.math.expression.parser.token.OperandToken;
 import io.github.kutify.math.expression.parser.token.OperatorToken;
 import io.github.kutify.math.expression.parser.token.OperatorType;
@@ -9,11 +11,13 @@ import io.github.kutify.math.expression.parser.token.Token;
 import io.github.kutify.math.expression.parser.token.TokenType;
 import io.github.kutify.math.exception.ExpressionSyntaxErrorType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public abstract class Parser {
 
@@ -25,6 +29,7 @@ public abstract class Parser {
     final static char MULTIPLY = '*';
     final static char DIVIDE = '/';
     final static char POWER = '^';
+    final static char COMMA = ',';
 
     static final char SPACE = ' ';
     static final char POINT = '.';
@@ -39,10 +44,27 @@ public abstract class Parser {
         List<Token> result = new LinkedList<>();
         Deque<Token> operators = new LinkedList<>();
 
-        for (Token token : tokens) {
+        final int size = tokens.size();
+        for (int i = 0; i < size; i++) {
+            Token token = tokens.get(i);
             TokenType tokenType = token.getType();
             if (tokenType == TokenType.OPERAND) {
-                result.add(token);
+                Token nextToken = i == size - 1 ? null : tokens.get(i + 1);
+                if (nextToken == null ||
+                        !(TokenType.PARENTHESIS.equals(nextToken.getType()) &&
+                        (((ParenthesisToken) nextToken).isOpening()))) {
+                    result.add(token);
+                } else {
+                    List<List<Token>> subTokens = new ArrayList<>();
+                    i = 1 + fillFunctionArgs(tokens, i + 1, subTokens);
+                    result.add(new FunctionTokensWrapper(
+                            i,
+                            ((OperandToken) token).getValue(),
+                            subTokens.stream()
+                                    .map(Parser::infixToPostfix)
+                                    .collect(Collectors.toList())
+                    ));
+                }
 
             } else if (tokenType == TokenType.OPERATOR) {
                 OperatorToken operator = (OperatorToken) token;
@@ -102,9 +124,37 @@ public abstract class Parser {
         return result;
     }
 
+    // Returns closing parenthesis position
+    private static int fillFunctionArgs(List<Token> input, int openingParenthesisPos, List<List<Token>> output) {
+        final int size = input.size();
+        List<Token> sublist = new ArrayList<>();
+        int parenthesisCounter = 1;
+        int i = openingParenthesisPos + 1;
+        for (; i < size; i++) {
+            Token token = input.get(i);
+            TokenType tokenType = token.getType();
+            if (TokenType.COMMA.equals(tokenType)) {
+                output.add(sublist);
+                sublist = new ArrayList<>();
+            } else {
+                if (TokenType.PARENTHESIS.equals(tokenType)) {
+                    ParenthesisToken parenthesisToken = (ParenthesisToken) token;
+                    parenthesisCounter += parenthesisToken.isOpening() ? 1 : -1;
+                } else {
+                    sublist.add(token);
+                }
+            }
+            if (parenthesisCounter == 0) {
+                output.add(sublist);
+                break;
+            }
+        }
+        return i;
+    }
+
     public static List<Token> parseTokens(String expression) {
         char[] chars = expression.toCharArray();
-        List<Token> tokens = new LinkedList<>();
+        List<Token> tokens = new ArrayList<>();
 
         int operandStart = 0;
         boolean prevWasOperandSymbol = false;
@@ -145,7 +195,7 @@ public abstract class Parser {
                 if (token.getType() == TokenType.OPERATOR) {
                     OperatorType operatorType = ((OperatorToken) token).getOperatorType();
                     if (operatorType == OperatorType.MINUS || operatorType == OperatorType.PLUS) {
-                        result.add(new OperandToken(-1,"0"));
+                        result.add(new OperandToken(-1, "0"));
                     }
                 }
             }
@@ -176,6 +226,9 @@ public abstract class Parser {
         }
         if (symbol == POWER) {
             return new OperatorToken(position, OperatorType.POWER);
+        }
+        if (symbol == COMMA) {
+            return new CommaToken(position);
         }
         return null;
     }
