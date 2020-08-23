@@ -65,6 +65,23 @@ public class BigRational extends Number implements Comparable<BigRational> {
         }
     }
 
+    private BigRational(BigInteger numerator, BigInteger denominator, boolean internal) {
+        this.numerator = numerator;
+        this.denominator = denominator;
+    }
+
+    public int signum() {
+        return numerator.signum();
+    }
+
+    public BigRational negate() {
+        return new BigRational(numerator.negate(), denominator, true);
+    }
+
+    public BigRational abs() {
+        return new BigRational(numerator.abs(), denominator, true);
+    }
+
     public BigRational add(BigRational o) {
         return new BigRational(
                 numerator.multiply(o.denominator).add(o.numerator.multiply(denominator)),

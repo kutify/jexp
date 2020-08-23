@@ -16,10 +16,16 @@ import io.github.kutify.math.expression.parser.token.OperandToken;
 import io.github.kutify.math.expression.parser.token.OperatorToken;
 import io.github.kutify.math.expression.parser.token.Token;
 import io.github.kutify.math.expression.parser.token.TokenType;
+import io.github.kutify.math.func.Abs;
+import io.github.kutify.math.func.Max;
+import io.github.kutify.math.func.Min;
+import io.github.kutify.math.func.Mult;
+import io.github.kutify.math.func.Sqrt;
 import io.github.kutify.math.func.Sum;
 import io.github.kutify.math.number.BigRational;
 import lombok.var;
 
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +41,14 @@ public class Expression {
     private static final OperatorTokenHandler OPERATOR_TOKEN_HANDLER = new OperatorTokenHandler();
 
     static {
-        DEFAULT_CONTEXT.registerFunction(new Sum());
+        Arrays.asList(
+                new Abs(),
+                new Max(),
+                new Min(),
+                new Mult(),
+                new Sqrt(),
+                new Sum()
+        ).forEach(DEFAULT_CONTEXT::registerFunction);
     }
 
     private final IOperand rootOperand;
