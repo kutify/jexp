@@ -29,11 +29,11 @@ public class ExpressionContext {
     private final Map<String, Function> functions;
     private final TokenHandler<FunctionTokensWrapper> functionWrapperTokenHandler;
 
-    public ExpressionContext() {
+    ExpressionContext() {
         this(null);
     }
 
-    public ExpressionContext(ExpressionContext context) {
+    ExpressionContext(ExpressionContext context) {
         if (context == null) {
             functions = new HashMap<>();
         } else {
@@ -48,7 +48,7 @@ public class ExpressionContext {
         functions.put(name, function);
     }
 
-    Expression parse(String expression) {
+    public Expression parse(String expression) {
         try {
             List<Token> tokens = Parser.infixToPostfix(Parser.parseTokens(expression));
             return new Expression(postfixTokensToOperand(tokens));

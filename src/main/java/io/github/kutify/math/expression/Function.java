@@ -5,7 +5,7 @@ import io.github.kutify.math.number.BigRational;
 import java.util.List;
 
 /**
- *
+ * Interface used to define custom functions.
  */
 public interface Function {
 
