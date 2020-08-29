@@ -42,7 +42,8 @@ class ExpressionTest {
     static Stream<org.junit.jupiter.params.provider.Arguments> getPowTestArgs() {
         return Stream.of(
                 org.junit.jupiter.params.provider.Arguments.of("(27)^(1/3)", "3.0"),
-                org.junit.jupiter.params.provider.Arguments.of("(2)^(1/2)", "1.414")
+                org.junit.jupiter.params.provider.Arguments.of("(27)^(1/3)", "3.0"),
+                org.junit.jupiter.params.provider.Arguments.of("2 4 7", "56")
         );
     }
 }
