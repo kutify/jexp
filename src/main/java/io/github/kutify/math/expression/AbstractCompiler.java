@@ -101,7 +101,7 @@ public abstract class AbstractCompiler<T> {
     }
 
     private static List<Token> infixToPostfix(List<Token> tokens) {
-        tokens = fixOperatorAtStart(tokens);
+        tokens = makeInfixListStrict(tokens);
         List<Token> result = new LinkedList<>();
         Deque<Token> operators = new LinkedList<>();
         final int size = tokens.size();
@@ -275,8 +275,8 @@ public abstract class AbstractCompiler<T> {
         return i;
     }
 
-    private static List<Token> fixOperatorAtStart(List<Token> tokens) {
-        List<Token> result = new LinkedList<>();
+    private static List<Token> makeInfixListStrict(List<Token> tokens) {
+        List<Token> result = new ArrayList<>(tokens.size() * 3 / 2);
         Token prevToken = null;
         for (Token token : tokens) {
             if (prevToken == null ||
@@ -287,6 +287,8 @@ public abstract class AbstractCompiler<T> {
                         result.add(new OperandToken(-1, "0"));
                     }
                 }
+            } else if (token.getType() == TokenType.OPERAND && prevToken.getType() == TokenType.OPERAND) {
+                result.add(new OperatorToken(token.getPosition(), OperatorType.MULTIPLY));
             }
             result.add(token);
             prevToken = token;
