@@ -1,7 +1,6 @@
-package io.github.kutify.math.expression.parser;
+package io.github.kutify.math.expression.token;
 
 import io.github.kutify.math.expression.operand.IOperand;
-import io.github.kutify.math.expression.parser.token.Token;
 
 import java.util.Deque;
 

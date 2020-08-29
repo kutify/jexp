@@ -1,4 +1,4 @@
-package io.github.kutify.math.expression.parser;
+package io.github.kutify.math.expression.token;
 
 import io.github.kutify.math.expression.operand.DivideOperand;
 import io.github.kutify.math.expression.operand.IOperand;
@@ -6,8 +6,6 @@ import io.github.kutify.math.expression.operand.MinusOperand;
 import io.github.kutify.math.expression.operand.MultiplyOperand;
 import io.github.kutify.math.expression.operand.PlusOperand;
 import io.github.kutify.math.expression.operand.PowerOperand;
-import io.github.kutify.math.expression.parser.token.OperatorToken;
-import io.github.kutify.math.expression.parser.token.OperatorType;
 
 import java.util.Deque;
 import java.util.EnumMap;

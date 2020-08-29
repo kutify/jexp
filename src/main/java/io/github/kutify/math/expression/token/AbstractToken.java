@@ -1,4 +1,4 @@
-package io.github.kutify.math.expression.parser.token;
+package io.github.kutify.math.expression.token;
 
 import lombok.RequiredArgsConstructor;
 

@@ -13,7 +13,16 @@ public class Mult implements Function {
     }
 
     @Override
-    public BigRational apply(List<BigRational> argValues) {
+    public Double applyDouble(List<Double> argValues) {
+        double result = 1;
+        for (double arg : argValues) {
+            result *= arg;
+        }
+        return result;
+    }
+
+    @Override
+    public BigRational applyRational(List<BigRational> argValues) {
         BigRational result = BigRational.ONE;
         for (BigRational arg : argValues) {
             result = result.multiply(arg);

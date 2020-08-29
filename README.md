@@ -49,7 +49,7 @@ We can explain it using the following pseudo code:
     Function<BigRational, BigRational> func = a -> Math.pow(a, 2);
 ```
 So, for the sake of performance, you can use ```Expression``` as a static field.
-```Expression``` instances are thread-safe.
+```Expression``` instances are reusable and thread-safe.
 ```
 public class MyClass {
     private static final Expression EXPRESSION = Expression.compile("a + b");
