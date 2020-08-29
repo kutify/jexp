@@ -14,15 +14,24 @@ public class Min implements Function {
     }
 
     @Override
-    public BigRational apply(List<BigRational> argValues) {
+    public BigRational applyRational(List<BigRational> argValues) {
+        return apply(argValues);
+    }
+
+    @Override
+    public Double applyDouble(List<Double> argValues) {
+        return apply(argValues);
+    }
+
+    private <T extends Comparable<T>> T apply(List<T> argValues) {
         final int size = argValues.size();
         if (size == 0) {
             throw new ArithmeticException("Could not evaluate minimum value among empty argument list");
         }
-        Iterator<BigRational> it = argValues.iterator();
-        BigRational min = it.next();
+        Iterator<T> it = argValues.iterator();
+        T min = it.next();
         while (it.hasNext()) {
-            BigRational item = it.next();
+            T item = it.next();
             if (item.compareTo(min) < 0) {
                 min = item;
             }

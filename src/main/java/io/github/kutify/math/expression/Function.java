@@ -29,5 +29,12 @@ public interface Function {
      * @param argValues values of the arguments
      * @return result of the function evaluation
      */
-    BigRational apply(List<BigRational> argValues);
+    BigRational applyRational(List<BigRational> argValues);
+
+    /**
+     * Applies the function to given argument values and returns the result.
+     * @param argValues values of the arguments
+     * @return result of the function evaluation
+     */
+    Double applyDouble(List<Double> argValues);
 }

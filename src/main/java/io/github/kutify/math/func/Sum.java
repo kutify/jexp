@@ -13,7 +13,16 @@ public class Sum implements Function {
     }
 
     @Override
-    public BigRational apply(List<BigRational> argValues) {
+    public Double applyDouble(List<Double> argValues) {
+        double result = 0;
+        for (double arg : argValues) {
+            result += arg;
+        }
+        return result;
+    }
+
+    @Override
+    public BigRational applyRational(List<BigRational> argValues) {
         BigRational result = BigRational.ZERO;
         for (BigRational arg : argValues) {
             result = result.add(arg);

@@ -18,7 +18,12 @@ public class Abs implements Function {
     }
 
     @Override
-    public BigRational apply(List<BigRational> argValues) {
+    public Double applyDouble(List<Double> argValues) {
+        return Math.abs(argValues.get(0));
+    }
+
+    @Override
+    public BigRational applyRational(List<BigRational> argValues) {
         return argValues.get(0).abs();
     }
 }

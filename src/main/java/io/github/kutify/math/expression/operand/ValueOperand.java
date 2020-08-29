@@ -1,17 +1,15 @@
 package io.github.kutify.math.expression.operand;
 
-import io.github.kutify.math.number.BigRational;
+public class ValueOperand<T> implements IValueOperand<T> {
 
-public class ValueOperand implements IValueOperand {
+    private final T value;
 
-    private final BigRational value;
-
-    public ValueOperand(BigRational value) {
+    public ValueOperand(T value) {
         this.value = value;
     }
 
     @Override
-    public BigRational getValue() {
+    public T getValue() {
         return value;
     }
 }

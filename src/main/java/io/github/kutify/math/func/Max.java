@@ -14,15 +14,24 @@ public class Max implements Function {
     }
 
     @Override
-    public BigRational apply(List<BigRational> argValues) {
+    public Double applyDouble(List<Double> argValues) {
+        return apply(argValues);
+    }
+
+    @Override
+    public BigRational applyRational(List<BigRational> argValues) {
+        return apply(argValues);
+    }
+
+    private <T extends Comparable<T>> T apply(List<T> argValues) {
         final int size = argValues.size();
         if (size == 0) {
             throw new ArithmeticException("Could not evaluate maximum value among empty argument list");
         }
-        Iterator<BigRational> it = argValues.iterator();
-        BigRational max = it.next();
+        Iterator<T> it = argValues.iterator();
+        T max = it.next();
         while (it.hasNext()) {
-            BigRational item = it.next();
+            T item = it.next();
             if (item.compareTo(max) > 0) {
                 max = item;
             }
