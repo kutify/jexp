@@ -287,10 +287,8 @@ public abstract class AbstractCompiler<T> {
                         result.add(new OperandToken(-1, "0"));
                     }
                 }
-            } else {
-                if (token.getType() == TokenType.OPERAND && prevToken.getType() == TokenType.OPERAND) {
-                    result.add(new OperatorToken(token.getPosition(), OperatorType.MULTIPLY));
-                }
+            } else if (token.getType() == TokenType.OPERAND && prevToken.getType() == TokenType.OPERAND) {
+                result.add(new OperatorToken(token.getPosition(), OperatorType.MULTIPLY));
             }
             result.add(token);
             prevToken = token;
