@@ -1,5 +1,7 @@
 package io.github.kutify.math.expression;
 
+import io.github.kutify.math.exception.ExpressionSyntaxErrorType;
+import io.github.kutify.math.exception.ExpressionSyntaxException;
 import io.github.kutify.math.expression.operand.FunctionOperand;
 import io.github.kutify.math.expression.operand.IOperand;
 import io.github.kutify.math.expression.token.TokenHandler;
@@ -55,11 +57,13 @@ public class ExpressionContext {
         public void handle(FunctionTokensWrapper token, Deque<IOperand> operandStack) {
             Function function = functions.get(token.getFunctionName());
             if (function == null) {
-                throw new RuntimeException("Function is not defined");
+                throw new ExpressionSyntaxException(ExpressionSyntaxErrorType.UNDEFINED_FUNCTION,
+                        token.getPosition());
             }
             List<List<Token>> argsTokens = token.getArgs();
             if (function.getArgsNumber() > -1 && function.getArgsNumber() != argsTokens.size()) {
-                throw new RuntimeException("Wrong arguments number");
+                throw new ExpressionSyntaxException(ExpressionSyntaxErrorType.WRONG_FUNCTION_ARGS_NUMBER,
+                        token.getPosition());
             }
             List<IOperand> operands = argsTokens.stream()
                     .map(doubleCompiler::postfixTokensToOperand)
