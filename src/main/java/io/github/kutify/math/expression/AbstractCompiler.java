@@ -19,7 +19,6 @@ import io.github.kutify.math.expression.operand.IOperand;
 import io.github.kutify.math.expression.operand.ValueOperand;
 import io.github.kutify.math.expression.operand.VarOperand;
 import io.github.kutify.math.expression.operation.Operation;
-import lombok.var;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,6 +64,8 @@ public abstract class AbstractCompiler<T> {
             } else {
                 throw ex;
             }
+        } catch (Exception ex) {
+            throw new ExpressionSyntaxException(expression, ex);
         }
     }
 
@@ -112,13 +113,13 @@ public abstract class AbstractCompiler<T> {
                 Token nextToken = i == size - 1 ? null : tokens.get(i + 1);
                 if (nextToken == null ||
                         !(TokenType.PARENTHESIS.equals(nextToken.getType()) &&
-                        (((ParenthesisToken) nextToken).isOpening()))) {
+                                (((ParenthesisToken) nextToken).isOpening()))) {
                     result.add(token);
                 } else {
                     List<List<Token>> subTokens = new ArrayList<>();
                     i = 1 + fillFunctionArgs(tokens, i + 1, subTokens);
                     result.add(new FunctionTokensWrapper(
-                            i,
+                            token.getPosition(),
                             ((OperandToken) token).getValue(),
                             subTokens.stream()
                                     .map(AbstractCompiler::infixToPostfix)
@@ -223,7 +224,7 @@ public abstract class AbstractCompiler<T> {
             }
         } else if (operand instanceof FunctionOperand) {
             FunctionOperand functionOperand = (FunctionOperand) operand;
-            var function = functionOperand.getFunction();
+            Function function = functionOperand.getFunction();
             List<java.util.function.Function<Map<String, T>, T>> funcs = functionOperand
                     .getArguments()
                     .stream()

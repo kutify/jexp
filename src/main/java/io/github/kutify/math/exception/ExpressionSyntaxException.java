@@ -23,6 +23,18 @@ public class ExpressionSyntaxException extends RuntimeException {
         ));
     }
 
+    public ExpressionSyntaxException(ExpressionSyntaxErrorType errorType, int position) {
+        this(null, Collections.singletonList(
+                new ExpressionSyntaxErrorItem(errorType, position)
+        ));
+    }
+
+    public ExpressionSyntaxException(String expression, Throwable ex) {
+        super("Expression \"" + expression + "\" contains some unrecognized errors", ex);
+        this.expression = expression;
+        this.errorItems = Collections.emptyList();
+    }
+
     private static String buildMessage(String expression, Collection<ExpressionSyntaxErrorItem> errorItems) {
         StringBuilder sb = new StringBuilder("Expression \"");
         sb.append(expression);
