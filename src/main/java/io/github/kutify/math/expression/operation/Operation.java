@@ -5,6 +5,7 @@ public enum Operation {
     MINUS,
     MULTIPLY,
     DIVIDE,
+    MOD,
     POWER,
     VALUE,
     VAR,

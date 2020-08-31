@@ -39,13 +39,13 @@ public abstract class AbstractCompiler<T> {
     static final char MULTIPLY = '*';
     static final char DIVIDE = '/';
     static final char POWER = '^';
+    static final char MOD = '%';
     static final char COMMA = ',';
 
     static final char SPACE = ' ';
     static final char POINT = '.';
     static final char UNDERSCORE = '_';
 
-    private static final OperandTokenHandler OPERAND_TOKEN_HANDLER = new OperandTokenHandler();
     private static final OperatorTokenHandler OPERATOR_TOKEN_HANDLER = new OperatorTokenHandler();
 
     final TokenHandler<FunctionTokensWrapper> functionWrapperTokenHandler;
@@ -184,7 +184,7 @@ public abstract class AbstractCompiler<T> {
         Deque<IOperand> operandStack = new LinkedList<>();
         for (Token token : tokens) {
             if (token.getType() == TokenType.OPERAND) {
-                OPERAND_TOKEN_HANDLER.handle((OperandToken) token, operandStack);
+                getOperandTokenHandler().handle((OperandToken) token, operandStack);
             } else if (token.getType() == TokenType.OPERATOR) {
                 OPERATOR_TOKEN_HANDLER.handle((OperatorToken) token, operandStack);
             } else if (token.getType() == TokenType.FUNCTION_TOKEN_WRAPPER) {
@@ -217,6 +217,10 @@ public abstract class AbstractCompiler<T> {
                 return varValues -> multiply(leftFunc.apply(varValues), rightFunc.apply(varValues));
             } else if (operation == Operation.DIVIDE) {
                 return varValues -> divide(leftFunc.apply(varValues), rightFunc.apply(varValues));
+            } else if (operation == Operation.MOD) {
+                return varValues -> {
+                    return mod(leftFunc.apply(varValues), rightFunc.apply(varValues));
+                };
             } else if (operation == Operation.POWER) {
                 return varValues -> pow(leftFunc.apply(varValues), (rightFunc.apply(varValues)));
             } else {
@@ -241,10 +245,12 @@ public abstract class AbstractCompiler<T> {
         }
     }
 
+    protected abstract OperandTokenHandler getOperandTokenHandler();
     protected abstract T plus(T left, T right);
     protected abstract T minus(T left, T right);
     protected abstract T multiply(T left, T right);
     protected abstract T divide(T left, T right);
+    protected abstract T mod(T left, T right);
     protected abstract T pow(T left, T right);
     protected abstract T applyFunction(Function function, List<T> args);
 
@@ -318,6 +324,9 @@ public abstract class AbstractCompiler<T> {
         }
         if (symbol == POWER) {
             return new OperatorToken(position, OperatorType.POWER);
+        }
+        if (symbol == MOD) {
+            return new OperatorToken(position, OperatorType.MOD);
         }
         if (symbol == COMMA) {
             return new CommaToken(position);

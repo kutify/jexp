@@ -4,6 +4,7 @@ public enum OperatorType {
     PLUS(2),
     MINUS(2),
     DIVIDE(3),
+    MOD(3),
     MULTIPLY(3),
     POWER(4);
 

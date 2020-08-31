@@ -128,8 +128,15 @@ public class BigRational extends Number implements Comparable<BigRational> {
                             Math.pow(doubleValue(),exponent.doubleValue())
                     ).setScale(16, BigDecimal.ROUND_HALF_UP)
             );
-
         }
+    }
+
+    public BigRational fractionPart() {
+        return new BigRational(numerator.mod(denominator), denominator, true);
+    }
+
+    public BigRational mod(BigRational o) {
+        return divide(o).fractionPart().multiply(o);
     }
 
     public boolean isInteger() {

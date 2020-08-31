@@ -9,7 +9,8 @@ import java.util.Map;
 
 public class Arguments<T> {
 
-    public static final Arguments EMPTY = Arguments.doubleBuilder().build();
+    public static final Arguments<Double> EMPTY_DOUBLE = Arguments.doubleBuilder().build();
+    public static final Arguments<BigRational> EMPTY_RATIONAL = Arguments.rationalBuilder().build();
 
     private final HashMap<String, T> arguments;
 

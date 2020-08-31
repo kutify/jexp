@@ -5,6 +5,7 @@ import io.github.kutify.math.exception.ExpressionSyntaxException;
 import io.github.kutify.math.expression.operand.DivideOperand;
 import io.github.kutify.math.expression.operand.IOperand;
 import io.github.kutify.math.expression.operand.MinusOperand;
+import io.github.kutify.math.expression.operand.ModOperand;
 import io.github.kutify.math.expression.operand.MultiplyOperand;
 import io.github.kutify.math.expression.operand.PlusOperand;
 import io.github.kutify.math.expression.operand.PowerOperand;
@@ -25,6 +26,7 @@ public class OperatorTokenHandler implements TokenHandler<OperatorToken> {
         mapper.put(OperatorType.MINUS, MinusOperand::new);
         mapper.put(OperatorType.MULTIPLY, MultiplyOperand::new);
         mapper.put(OperatorType.DIVIDE, DivideOperand::new);
+        mapper.put(OperatorType.MOD, ModOperand::new);
         mapper.put(OperatorType.POWER, PowerOperand::new);
     }
 

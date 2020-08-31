@@ -30,7 +30,7 @@ class ExpressionTest {
     void powerOperationTest(String expression, String expected) {
         String actual = String.valueOf(
                 Expression.compileRational(expression)
-                        .evaluate(Arguments.EMPTY)
+                        .evaluate(Arguments.EMPTY_RATIONAL)
                         .doubleValue()
         );
         assertEquals(
