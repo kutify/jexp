@@ -19,6 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class BigRationalTest {
 
     @Test
+    void modOperationTest() {
+        assertEquals(
+                BigRational.parse("2/15"),
+                BigRational.parse("7/3").mod(BigRational.parse("1/5"))
+        );
+    }
+
+    @Test
     void test(SoftAssertions softly) {
         var testList = getTestList();
 

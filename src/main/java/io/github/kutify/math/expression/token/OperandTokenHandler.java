@@ -6,11 +6,10 @@ import io.github.kutify.math.exception.VariableFormatException;
 import io.github.kutify.math.expression.operand.IOperand;
 import io.github.kutify.math.expression.operand.ValueOperand;
 import io.github.kutify.math.expression.operand.VarOperand;
-import io.github.kutify.math.number.BigRational;
 
 import java.util.Deque;
 
-public class OperandTokenHandler implements TokenHandler<OperandToken> {
+public abstract class OperandTokenHandler<T> implements TokenHandler<OperandToken> {
 
     @Override
     public void handle(OperandToken token, Deque<IOperand> operandStack) {
@@ -18,7 +17,7 @@ public class OperandTokenHandler implements TokenHandler<OperandToken> {
         IOperand operand;
         if (Character.isDigit(value.charAt(0))) { // TODO Change it to proper validation
             try {
-                operand = new ValueOperand(BigRational.parse(value));
+                operand = new ValueOperand<T>(parseValue(value));
             } catch (NumberFormatException ex) {
                 throw new ExpressionSyntaxException(null, ExpressionSyntaxErrorType.INVALID_NUMBER_FORMAT,
                         token.getPosition());
@@ -33,4 +32,6 @@ public class OperandTokenHandler implements TokenHandler<OperandToken> {
         }
         operandStack.push(operand);
     }
+
+    protected abstract T parseValue(String value);
 }
