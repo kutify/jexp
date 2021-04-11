@@ -15,6 +15,13 @@ public class BigRational extends Number implements Comparable<BigRational> {
         return new BigRational(BigInteger.valueOf(number), BigInteger.ONE);
     }
 
+    public static BigRational valueOf(double number) {
+        return BigRational.valueOf(
+                new BigDecimal(number)
+                        .setScale(16, BigDecimal.ROUND_HALF_UP)
+        );
+    }
+
     public static BigRational valueOf(BigInteger number) {
         return new BigRational(number, BigInteger.ONE);
     }
@@ -124,9 +131,7 @@ public class BigRational extends Number implements Comparable<BigRational> {
             return pow(exponent.intValueExact());
         } catch (ArithmeticException ex) {
             return BigRational.valueOf(
-                    new BigDecimal(
-                            Math.pow(doubleValue(),exponent.doubleValue())
-                    ).setScale(16, BigDecimal.ROUND_HALF_UP)
+                    Math.pow(doubleValue(), exponent.doubleValue())
             );
         }
     }

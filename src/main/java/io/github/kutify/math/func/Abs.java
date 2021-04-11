@@ -1,11 +1,8 @@
 package io.github.kutify.math.func;
 
-import io.github.kutify.math.expression.Function;
 import io.github.kutify.math.number.BigRational;
 
-import java.util.List;
-
-public class Abs implements Function {
+public class Abs extends OneArgFunction {
 
     @Override
     public String getName() {
@@ -13,17 +10,12 @@ public class Abs implements Function {
     }
 
     @Override
-    public int getArgsNumber() {
-        return 1;
+    BigRational applySingle(BigRational argValue) {
+        return argValue.abs();
     }
 
     @Override
-    public Double applyDouble(List<Double> argValues) {
-        return Math.abs(argValues.get(0));
-    }
-
-    @Override
-    public BigRational applyRational(List<BigRational> argValues) {
-        return argValues.get(0).abs();
+    Double applySingle(Double argValue) {
+        return Math.abs(argValue);
     }
 }

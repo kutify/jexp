@@ -51,6 +51,10 @@ public class DoubleCompiler extends AbstractCompiler<Double> {
 
     @Override
     protected Double pow(Double left, Double right) {
+        if (left < 0 && Math.floor(right) != right) {
+            throw new ArithmeticException("Forbidden operation: negative " + left +" to the power of non integer " +
+                    right);
+        }
         return Math.pow(left, right);
     }
 

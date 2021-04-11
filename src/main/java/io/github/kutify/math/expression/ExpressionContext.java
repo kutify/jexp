@@ -32,9 +32,18 @@ public class ExpressionContext {
         } else {
             functions = new HashMap<>(context.functions);
         }
-        TokenHandler<FunctionTokensWrapper> functionWrapperTokenHandler = new FunctionWrapperTokenHandler();
-        doubleCompiler = new DoubleCompiler(functionWrapperTokenHandler);
-        rationalCompiler = new RationalCompiler(functionWrapperTokenHandler);
+        doubleCompiler = new DoubleCompiler(new AbstractFunctionWrapperTokenHandler() {
+            @Override
+            protected AbstractCompiler getCompiler() {
+                return doubleCompiler;
+            }
+        });
+        rationalCompiler = new RationalCompiler(new AbstractFunctionWrapperTokenHandler() {
+            @Override
+            protected AbstractCompiler getCompiler() {
+                return rationalCompiler;
+            }
+        });
     }
 
     public void registerFunction(Function function) {
@@ -51,7 +60,7 @@ public class ExpressionContext {
         return doubleCompiler.compile(expression);
     }
 
-    public class FunctionWrapperTokenHandler implements TokenHandler<FunctionTokensWrapper> {
+    public abstract class AbstractFunctionWrapperTokenHandler implements TokenHandler<FunctionTokensWrapper> {
 
         @Override
         public void handle(FunctionTokensWrapper token, Deque<IOperand> operandStack) {
@@ -66,9 +75,11 @@ public class ExpressionContext {
                         token.getPosition());
             }
             List<IOperand> operands = argsTokens.stream()
-                    .map(doubleCompiler::postfixTokensToOperand)
+                    .map(getCompiler()::postfixTokensToOperand)
                     .collect(Collectors.toList());
             operandStack.push(new FunctionOperand(function, operands));
         }
+
+        protected abstract AbstractCompiler getCompiler();
     }
 }

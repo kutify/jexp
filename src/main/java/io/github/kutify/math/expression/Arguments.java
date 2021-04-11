@@ -72,7 +72,7 @@ public class Arguments<T> {
 
         @Override
         protected BigRational cast(double value) {
-            return BigRational.parse(Double.valueOf(value).toString()); // TODO optimize
+            return BigRational.valueOf(value);
         }
 
         @Override

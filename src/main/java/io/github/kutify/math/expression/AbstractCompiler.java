@@ -218,9 +218,7 @@ public abstract class AbstractCompiler<T> {
             } else if (operation == Operation.DIVIDE) {
                 return varValues -> divide(leftFunc.apply(varValues), rightFunc.apply(varValues));
             } else if (operation == Operation.MOD) {
-                return varValues -> {
-                    return mod(leftFunc.apply(varValues), rightFunc.apply(varValues));
-                };
+                return varValues -> mod(leftFunc.apply(varValues), rightFunc.apply(varValues));
             } else if (operation == Operation.POWER) {
                 return varValues -> pow(leftFunc.apply(varValues), (rightFunc.apply(varValues)));
             } else {
