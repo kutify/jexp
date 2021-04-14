@@ -77,12 +77,12 @@ public class JExp {
         return DEFAULT_FACTORY.compileDouble(expression);
     }
 
-
-    // -----  Constants  --------------------------------------------------------------------------
-
     public static Expression<BigRational> compileRational(String expression) {
         return DEFAULT_FACTORY.compileRational(expression);
     }
+
+
+    // -----  Constants  --------------------------------------------------------------------------
 
     public static Constant constant(String name, double value) {
         return new ConstantImpl(name, value);
@@ -92,12 +92,12 @@ public class JExp {
         return new ConstantImpl(name, value);
     }
 
-
-    // -----  Arguments  --------------------------------------------------------------------------
-
     public static Constant constant(String name, double doubleValue, BigRational rationalValue) {
         return new ConstantImpl(name, doubleValue, rationalValue);
     }
+
+
+    // -----  Arguments  --------------------------------------------------------------------------
 
     public static ArgumentsBuilder<Double> argsBuilder() {
         return doubleArgsBuilder();
@@ -122,9 +122,6 @@ public class JExp {
     public static Arguments<Double> doubleArgs(Map<String, Double> args) {
         return () -> args;
     }
-
-
-    // --------------------------------------------------------------------------------------------
 
     public static Arguments<BigRational> rationalArgs(Map<String, BigRational> args) {
         return () -> args;
