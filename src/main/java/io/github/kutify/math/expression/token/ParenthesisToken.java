@@ -16,6 +16,6 @@ public class ParenthesisToken extends AbstractToken {
     @Override
     public boolean equalsRegardlessPosition(Token o) {
         return o.getType() == TokenType.PARENTHESIS &&
-                ((ParenthesisToken) o).isOpening == isOpening;
+            ((ParenthesisToken) o).isOpening == isOpening;
     }
 }

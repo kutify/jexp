@@ -39,7 +39,7 @@ public class OperatorTokenHandler implements TokenHandler<OperatorToken> {
             operandStack.push(mapper.get(operatorType).apply(left, right));
         } catch (NoSuchElementException ex) {
             throw new ExpressionSyntaxException(ExpressionSyntaxErrorType.WRONG_SYNTAX_AROUND_OPERATOR,
-                    token.getPosition());
+                token.getPosition());
         }
     }
 }

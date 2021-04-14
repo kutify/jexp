@@ -29,7 +29,7 @@ public abstract class OperandTokenHandler<T> implements TokenHandler<OperandToke
                 operand = new ValueOperand<>(parseValue(value));
             } catch (NumberFormatException ex) {
                 throw new ExpressionSyntaxException(null, ExpressionSyntaxErrorType.INVALID_NUMBER_FORMAT,
-                        token.getPosition());
+                    token.getPosition());
             }
         } else {
             Constant constant = constantsProvider.get().get(value);

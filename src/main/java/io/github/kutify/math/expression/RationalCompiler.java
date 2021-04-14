@@ -2,9 +2,9 @@ package io.github.kutify.math.expression;
 
 import io.github.kutify.math.api.Constant;
 import io.github.kutify.math.api.Function;
+import io.github.kutify.math.expression.token.FunctionTokensWrapper;
 import io.github.kutify.math.expression.token.OperandTokenHandler;
 import io.github.kutify.math.expression.token.TokenHandler;
-import io.github.kutify.math.expression.token.FunctionTokensWrapper;
 import io.github.kutify.math.number.BigRational;
 
 import java.util.List;
@@ -13,17 +13,18 @@ import java.util.function.Supplier;
 
 public class RationalCompiler extends AbstractCompiler<BigRational> {
 
-    private final OperandTokenHandler<BigRational> operandTokenHandler = new OperandTokenHandler<BigRational>(constantsProvider) {
-        @Override
-        protected BigRational parseValue(String value) {
-            return BigRational.parse(value);
-        }
+    private final OperandTokenHandler<BigRational> operandTokenHandler =
+        new OperandTokenHandler<BigRational>(constantsProvider) {
+            @Override
+            protected BigRational parseValue(String value) {
+                return BigRational.parse(value);
+            }
 
-        @Override
-        protected BigRational getConstantValue(Constant constant) {
-            return constant.getRationalValue();
-        }
-    };
+            @Override
+            protected BigRational getConstantValue(Constant constant) {
+                return constant.getRationalValue();
+            }
+        };
 
     public RationalCompiler(TokenHandler<FunctionTokensWrapper> functionWrapperTokenHandler,
                             Supplier<Map<String, Constant>> constantsProvider) {

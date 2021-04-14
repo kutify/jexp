@@ -18,6 +18,6 @@ public class OperandToken extends AbstractToken {
     @Override
     public boolean equalsRegardlessPosition(Token o) {
         return o.getType() == TokenType.OPERAND &&
-                Objects.equals(((OperandToken) o).value, value);
+            Objects.equals(((OperandToken) o).value, value);
     }
 }

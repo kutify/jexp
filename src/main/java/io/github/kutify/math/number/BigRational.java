@@ -10,48 +10,6 @@ public class BigRational extends Number implements Comparable<BigRational> {
     public static final BigRational ONE = new BigRational(BigInteger.ONE, BigInteger.ONE);
 
     private static final String SLASH = "/";
-
-    public static BigRational valueOf(long number) {
-        return new BigRational(BigInteger.valueOf(number), BigInteger.ONE);
-    }
-
-    public static BigRational valueOf(double number) {
-        return BigRational.valueOf(
-                new BigDecimal(number)
-                        .setScale(16, BigDecimal.ROUND_HALF_UP)
-        );
-    }
-
-    public static BigRational valueOf(BigInteger number) {
-        return new BigRational(number, BigInteger.ONE);
-    }
-
-    public static BigRational valueOf(BigDecimal number) {
-        number = number.stripTrailingZeros();
-        int scale = Math.max(number.scale(), 0);
-        return new BigRational(
-                number.movePointRight(scale).toBigInteger(),
-                BigInteger.TEN.pow(scale)
-        );
-    }
-
-    public static BigRational parse(String value) {
-        String[] numeratorAndDenominator = value.split(SLASH, -1);
-        if (numeratorAndDenominator.length > 2) {
-            throw new NumberFormatException();
-        }
-        if (numeratorAndDenominator.length == 1) {
-            return BigRational.parseDecimal(numeratorAndDenominator[0]);
-        } else {
-            return BigRational.parseDecimal(numeratorAndDenominator[0])
-                    .divide(BigRational.parseDecimal(numeratorAndDenominator[1]));
-        }
-    }
-
-    private static BigRational parseDecimal(String decimal) {
-        return valueOf(new BigDecimal(decimal));
-    }
-
     private final BigInteger numerator;
     private final BigInteger denominator;
 
@@ -77,6 +35,47 @@ public class BigRational extends Number implements Comparable<BigRational> {
         this.denominator = denominator;
     }
 
+    public static BigRational valueOf(long number) {
+        return new BigRational(BigInteger.valueOf(number), BigInteger.ONE);
+    }
+
+    public static BigRational valueOf(double number) {
+        return BigRational.valueOf(
+            new BigDecimal(number)
+                .setScale(16, BigDecimal.ROUND_HALF_UP)
+        );
+    }
+
+    public static BigRational valueOf(BigInteger number) {
+        return new BigRational(number, BigInteger.ONE);
+    }
+
+    public static BigRational valueOf(BigDecimal number) {
+        number = number.stripTrailingZeros();
+        int scale = Math.max(number.scale(), 0);
+        return new BigRational(
+            number.movePointRight(scale).toBigInteger(),
+            BigInteger.TEN.pow(scale)
+        );
+    }
+
+    public static BigRational parse(String value) {
+        String[] numeratorAndDenominator = value.split(SLASH, -1);
+        if (numeratorAndDenominator.length > 2) {
+            throw new NumberFormatException();
+        }
+        if (numeratorAndDenominator.length == 1) {
+            return BigRational.parseDecimal(numeratorAndDenominator[0]);
+        } else {
+            return BigRational.parseDecimal(numeratorAndDenominator[0])
+                .divide(BigRational.parseDecimal(numeratorAndDenominator[1]));
+        }
+    }
+
+    private static BigRational parseDecimal(String decimal) {
+        return valueOf(new BigDecimal(decimal));
+    }
+
     public int signum() {
         return numerator.signum();
     }
@@ -91,29 +90,29 @@ public class BigRational extends Number implements Comparable<BigRational> {
 
     public BigRational add(BigRational o) {
         return new BigRational(
-                numerator.multiply(o.denominator).add(o.numerator.multiply(denominator)),
-                denominator.multiply(o.denominator)
+            numerator.multiply(o.denominator).add(o.numerator.multiply(denominator)),
+            denominator.multiply(o.denominator)
         );
     }
 
     public BigRational subtract(BigRational o) {
         return new BigRational(
-                numerator.multiply(o.denominator).subtract(o.numerator.multiply(denominator)),
-                denominator.multiply(o.denominator)
+            numerator.multiply(o.denominator).subtract(o.numerator.multiply(denominator)),
+            denominator.multiply(o.denominator)
         );
     }
 
     public BigRational multiply(BigRational o) {
         return new BigRational(
-                numerator.multiply(o.numerator),
-                denominator.multiply(o.denominator)
+            numerator.multiply(o.numerator),
+            denominator.multiply(o.denominator)
         );
     }
 
     public BigRational divide(BigRational o) {
         return new BigRational(
-                numerator.multiply(o.denominator),
-                denominator.multiply(o.numerator)
+            numerator.multiply(o.denominator),
+            denominator.multiply(o.numerator)
         );
     }
 
@@ -131,7 +130,7 @@ public class BigRational extends Number implements Comparable<BigRational> {
             return pow(exponent.intValueExact());
         } catch (ArithmeticException ex) {
             return BigRational.valueOf(
-                    Math.pow(doubleValue(), exponent.doubleValue())
+                Math.pow(doubleValue(), exponent.doubleValue())
             );
         }
     }
@@ -187,7 +186,7 @@ public class BigRational extends Number implements Comparable<BigRational> {
     @Override
     public int compareTo(BigRational o) {
         return numerator.multiply(o.denominator)
-                .compareTo(o.numerator.multiply(denominator));
+            .compareTo(o.numerator.multiply(denominator));
     }
 
     @Override
@@ -196,7 +195,7 @@ public class BigRational extends Number implements Comparable<BigRational> {
         if (o == null || getClass() != o.getClass()) return false;
         BigRational that = (BigRational) o;
         return Objects.equals(numerator, that.numerator) &&
-                Objects.equals(denominator, that.denominator);
+            Objects.equals(denominator, that.denominator);
     }
 
     @Override

@@ -18,35 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SoftAssertionsExtension.class)
 class BigRationalTest {
 
-    @Test
-    void modOperationTest() {
-        assertEquals(
-                BigRational.parse("2/15"),
-                BigRational.parse("7/3").mod(BigRational.parse("1/5"))
-        );
-    }
-
-    @Test
-    void test(SoftAssertions softly) {
-        var testList = getTestList();
-
-        BigRational prev = null;
-        for (var testItem : testList) {
-            BigRational next = BigRational.parse(testItem.getFirst());
-            checkItem(softly, next, testItem.getSecond(), testItem.getThird());
-            if (prev != null) {
-                if (testItem.getFourth()) {
-                    assertEquals(0, next.compareTo(prev));
-                    assertEquals(prev, next);
-                } else {
-                    assertTrue(next.compareTo(prev) > 0);
-                    assertNotEquals(prev, next);
-                }
-            }
-            prev = next;
-        }
-    }
-
     private static void checkItem(SoftAssertions softly,
                                   BigRational value,
                                   BigRational expectedValue,
@@ -71,5 +42,34 @@ class BigRationalTest {
         list.add(Four.of("1.0/1.0", BigRational.ONE, "1", true));
 
         return list;
+    }
+
+    @Test
+    void modOperationTest() {
+        assertEquals(
+            BigRational.parse("2/15"),
+            BigRational.parse("7/3").mod(BigRational.parse("1/5"))
+        );
+    }
+
+    @Test
+    void test(SoftAssertions softly) {
+        var testList = getTestList();
+
+        BigRational prev = null;
+        for (var testItem : testList) {
+            BigRational next = BigRational.parse(testItem.getFirst());
+            checkItem(softly, next, testItem.getSecond(), testItem.getThird());
+            if (prev != null) {
+                if (testItem.getFourth()) {
+                    assertEquals(0, next.compareTo(prev));
+                    assertEquals(prev, next);
+                } else {
+                    assertTrue(next.compareTo(prev) > 0);
+                    assertNotEquals(prev, next);
+                }
+            }
+            prev = next;
+        }
     }
 }

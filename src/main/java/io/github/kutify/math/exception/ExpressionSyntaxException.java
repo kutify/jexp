@@ -19,13 +19,13 @@ public class ExpressionSyntaxException extends RuntimeException {
 
     public ExpressionSyntaxException(String expression, ExpressionSyntaxErrorType errorType, int position) {
         this(expression, Collections.singletonList(
-                new ExpressionSyntaxErrorItem(errorType, position)
+            new ExpressionSyntaxErrorItem(errorType, position)
         ));
     }
 
     public ExpressionSyntaxException(ExpressionSyntaxErrorType errorType, int position) {
         this(null, Collections.singletonList(
-                new ExpressionSyntaxErrorItem(errorType, position)
+            new ExpressionSyntaxErrorItem(errorType, position)
         ));
     }
 
