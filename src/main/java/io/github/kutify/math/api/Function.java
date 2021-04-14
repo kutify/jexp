@@ -1,23 +1,25 @@
-package io.github.kutify.math.expression;
+package io.github.kutify.math.api;
 
 import io.github.kutify.math.number.BigRational;
 
 import java.util.List;
 
 /**
- * Interface used to define custom functions.
+ * Interface is used to define custom functions.
  */
 public interface Function {
 
     /**
      * Returns the name of the function.
      * Return value mustn't be null.
+     *
      * @return function name
      */
     String getName();
 
     /**
      * Returns the number of function arguments if it is fixed, otherwise returns -1.
+     *
      * @return function arguments number or -1 if it is not fixed
      */
     default int getArgsNumber() {
@@ -26,6 +28,7 @@ public interface Function {
 
     /**
      * Applies the function to given argument values and returns the result.
+     *
      * @param argValues values of the arguments
      * @return result of the function evaluation
      */
@@ -33,6 +36,7 @@ public interface Function {
 
     /**
      * Applies the function to given argument values and returns the result.
+     *
      * @param argValues values of the arguments
      * @return result of the function evaluation
      */

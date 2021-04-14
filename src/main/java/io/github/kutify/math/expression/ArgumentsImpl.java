@@ -1,33 +1,26 @@
 package io.github.kutify.math.expression;
 
+import io.github.kutify.math.api.Arguments;
+import io.github.kutify.math.api.ArgumentsBuilder;
 import io.github.kutify.math.number.BigRational;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Arguments<T> {
+public class ArgumentsImpl<T> implements Arguments<T> {
 
-    public static final Arguments<Double> EMPTY_DOUBLE = Arguments.doubleBuilder().build();
-    public static final Arguments<BigRational> EMPTY_RATIONAL = Arguments.rationalBuilder().build();
+    private final Map<String, T> arguments;
 
-    private final HashMap<String, T> arguments;
-
-    private Arguments(Map<String, T> arguments) {
-        this.arguments = new HashMap<>(arguments);
+    private ArgumentsImpl(Map<String, T> arguments) {
+        this.arguments = Collections.unmodifiableMap(arguments);
     }
 
-    Map<String, T> getArguments() {
+    @Override
+    public Map<String, T> getArguments() {
         return arguments;
-    }
-
-    static Builder<Double> doubleBuilder() {
-        return new DoubleBuilder();
-    }
-
-    static Builder<BigRational> rationalBuilder() {
-        return new RationalBuilder();
     }
 
     public static class DoubleBuilder extends Builder<Double> {
@@ -96,42 +89,49 @@ public class Arguments<T> {
         }
     }
 
-    public abstract static class Builder<T> {
+    public abstract static class Builder<T> implements ArgumentsBuilder<T> {
 
-        private final HashMap<String, T> arguments = new HashMap<>();
+        private final Map<String, T> arguments = new HashMap<>();
 
+        @Override
         public final Builder<T> with(String argName, long value) {
             arguments.put(argName, cast(value));
             return this;
         }
 
+        @Override
         public final Builder<T> with(String argName, double value) {
             arguments.put(argName, cast(value));
             return this;
         }
 
+        @Override
         public final Builder<T> with(String argName, BigInteger value) {
             arguments.put(argName, cast(value));
             return this;
         }
 
+        @Override
         public final Builder<T> with(String argName, BigDecimal value) {
             arguments.put(argName, cast(value));
             return this;
         }
 
+        @Override
         public final Builder<T> with(String argName, BigRational value) {
             arguments.put(argName, cast(value));
             return this;
         }
 
+        @Override
         public final Builder<T> with(String argName, String value) {
             arguments.put(argName, cast(value));
             return this;
         }
 
-        public Arguments<T> build() {
-            return new Arguments<>(arguments);
+        @Override
+        public ArgumentsImpl<T> build() {
+            return new ArgumentsImpl<>(arguments);
         }
 
         protected abstract T cast(long value);

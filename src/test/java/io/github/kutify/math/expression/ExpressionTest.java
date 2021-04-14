@@ -1,5 +1,7 @@
 package io.github.kutify.math.expression;
 
+import io.github.kutify.math.api.Expression;
+import io.github.kutify.math.api.JExp;
 import io.github.kutify.math.number.BigRational;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,11 +15,11 @@ class ExpressionTest {
 
     @Test
     void test() {
-        Expression<BigRational> expression = Expression.compileRational("(a/3)^2 + (b/3)^(-1)");
+        Expression<BigRational> expression = JExp.compileRational("(a/3)^2 + (b/3)^(-1)");
 
         assertEquals("29/18",
                 expression.evaluate(
-                        Arguments.rationalBuilder()
+                        JExp.rationalArgsBuilder()
                                 .with("a", 1)
                                 .with("b", 2)
                                 .build()
@@ -29,8 +31,8 @@ class ExpressionTest {
     @MethodSource("getPowTestArgs")
     void powerOperationTest(String expression, String expected) {
         String actual = String.valueOf(
-                Expression.compileRational(expression)
-                        .evaluate(Arguments.EMPTY_RATIONAL)
+            JExp.compileRational(expression)
+                        .evaluate(JExp.emptyArgs())
                         .doubleValue()
         );
         assertEquals(

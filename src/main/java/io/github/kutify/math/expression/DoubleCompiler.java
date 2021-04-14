@@ -1,26 +1,36 @@
 package io.github.kutify.math.expression;
 
+import io.github.kutify.math.api.Constant;
+import io.github.kutify.math.api.Function;
 import io.github.kutify.math.expression.token.OperandTokenHandler;
 import io.github.kutify.math.expression.token.TokenHandler;
 import io.github.kutify.math.expression.token.FunctionTokensWrapper;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class DoubleCompiler extends AbstractCompiler<Double> {
 
-    private final OperandTokenHandler<Double> operandTokenHandler = new OperandTokenHandler<Double>() {
+    private final OperandTokenHandler<Double> operandTokenHandler = new OperandTokenHandler<Double>(constantsProvider) {
         @Override
         protected Double parseValue(String value) {
             return Double.valueOf(value);
         }
+
+        @Override
+        protected Double getConstantValue(Constant constant) {
+            return constant.getDoubleValue();
+        }
     };
 
-    public DoubleCompiler(TokenHandler<FunctionTokensWrapper> functionWrapperTokenHandler) {
-        super(functionWrapperTokenHandler);
+    public DoubleCompiler(TokenHandler<FunctionTokensWrapper> functionWrapperTokenHandler,
+                          Supplier<Map<String, Constant>> constantsProvider) {
+        super(functionWrapperTokenHandler, constantsProvider);
     }
 
     @Override
-    protected OperandTokenHandler getOperandTokenHandler() {
+    protected OperandTokenHandler<Double> getOperandTokenHandler() {
         return operandTokenHandler;
     }
 

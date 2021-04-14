@@ -1,5 +1,7 @@
 package io.github.kutify.math.expression;
 
+import io.github.kutify.math.api.Constant;
+import io.github.kutify.math.api.Function;
 import io.github.kutify.math.exception.ExpressionSyntaxException;
 import io.github.kutify.math.expression.token.OperandTokenHandler;
 import io.github.kutify.math.expression.token.OperatorTokenHandler;
@@ -27,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public abstract class AbstractCompiler<T> {
@@ -49,15 +52,22 @@ public abstract class AbstractCompiler<T> {
     private static final OperatorTokenHandler OPERATOR_TOKEN_HANDLER = new OperatorTokenHandler();
 
     final TokenHandler<FunctionTokensWrapper> functionWrapperTokenHandler;
+    protected final Supplier<Map<String, Constant>> constantsProvider;
 
-    protected AbstractCompiler(TokenHandler<FunctionTokensWrapper> functionWrapperTokenHandler) {
+    protected AbstractCompiler(TokenHandler<FunctionTokensWrapper> functionWrapperTokenHandler,
+                               Supplier<Map<String, Constant>> constantsProvider) {
         this.functionWrapperTokenHandler = functionWrapperTokenHandler;
+        this.constantsProvider = constantsProvider;
     }
 
-    public Expression<T> compile(String expression) {
+    public ExpressionImpl<T> compile(String expression) {
         try {
             List<Token> tokens = infixToPostfix(parseTokens(expression));
-            return new Expression<>(generateEvalFunction(postfixTokensToOperand(tokens)));
+            return new ExpressionImpl<>(
+                generateEvalFunction(
+                    postfixTokensToOperand(tokens)
+                )
+            );
         } catch (ExpressionSyntaxException ex) {
             if (ex.getExpression() == null) {
                 throw new ExpressionSyntaxException(expression, ex.getErrorItems());
@@ -122,7 +132,7 @@ public abstract class AbstractCompiler<T> {
                             token.getPosition(),
                             ((OperandToken) token).getValue(),
                             subTokens.stream()
-                                    .map(AbstractCompiler::infixToPostfix)
+                                    .<List<Token>>map(AbstractCompiler::infixToPostfix)
                                     .collect(Collectors.toList())
                     ));
                 }
@@ -243,7 +253,7 @@ public abstract class AbstractCompiler<T> {
         }
     }
 
-    protected abstract OperandTokenHandler getOperandTokenHandler();
+    protected abstract OperandTokenHandler<T> getOperandTokenHandler();
     protected abstract T plus(T left, T right);
     protected abstract T minus(T left, T right);
     protected abstract T multiply(T left, T right);
