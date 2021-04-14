@@ -13,17 +13,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ExpressionTest {
 
+    static Stream<org.junit.jupiter.params.provider.Arguments> getPowTestArgs() {
+        return Stream.of(
+            org.junit.jupiter.params.provider.Arguments.of("(27)^(1/3)", "3.0"),
+            org.junit.jupiter.params.provider.Arguments.of("(27)^(1/3)", "3.0"),
+            org.junit.jupiter.params.provider.Arguments.of("2 4 7", "56")
+        );
+    }
+
     @Test
     void test() {
         Expression<BigRational> expression = JExp.compileRational("(a/3)^2 + (b/3)^(-1)");
 
         assertEquals("29/18",
-                expression.evaluate(
-                        JExp.rationalArgsBuilder()
-                                .with("a", 1)
-                                .with("b", 2)
-                                .build()
-                ).toString()
+            expression.evaluate(
+                JExp.rationalArgsBuilder()
+                    .with("a", 1)
+                    .with("b", 2)
+                    .build()
+            ).toString()
         );
     }
 
@@ -32,20 +40,12 @@ class ExpressionTest {
     void powerOperationTest(String expression, String expected) {
         String actual = String.valueOf(
             JExp.compileRational(expression)
-                        .evaluate(JExp.emptyArgs())
-                        .doubleValue()
+                .evaluate(JExp.emptyArgs())
+                .doubleValue()
         );
         assertEquals(
-                expected,
-                actual.substring(0, expected.length())
-        );
-    }
-
-    static Stream<org.junit.jupiter.params.provider.Arguments> getPowTestArgs() {
-        return Stream.of(
-                org.junit.jupiter.params.provider.Arguments.of("(27)^(1/3)", "3.0"),
-                org.junit.jupiter.params.provider.Arguments.of("(27)^(1/3)", "3.0"),
-                org.junit.jupiter.params.provider.Arguments.of("2 4 7", "56")
+            expected,
+            actual.substring(0, expected.length())
         );
     }
 }

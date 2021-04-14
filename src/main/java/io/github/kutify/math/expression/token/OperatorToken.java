@@ -24,6 +24,6 @@ public class OperatorToken extends AbstractToken {
     @Override
     public boolean equalsRegardlessPosition(Token o) {
         return o.getType() == TokenType.OPERATOR &&
-                ((OperatorToken) o).operatorType == operatorType;
+            ((OperatorToken) o).operatorType == operatorType;
     }
 }

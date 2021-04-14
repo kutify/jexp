@@ -9,15 +9,15 @@ public class Four<A, B, C, D> {
     private final C third;
     private final D fourth;
 
-    public static <A, B, C, D> Four<A, B, C, D> of(A first, B second, C third, D fourth) {
-        return new Four<>(first, second, third, fourth);
-    }
-
     private Four(A first, B second, C third, D fourth) {
         this.first = first;
         this.second = second;
         this.third = third;
         this.fourth = fourth;
+    }
+
+    public static <A, B, C, D> Four<A, B, C, D> of(A first, B second, C third, D fourth) {
+        return new Four<>(first, second, third, fourth);
     }
 
     public A getFirst() {
@@ -42,9 +42,9 @@ public class Four<A, B, C, D> {
         if (o == null || getClass() != o.getClass()) return false;
         Four<?, ?, ?, ?> four = (Four<?, ?, ?, ?>) o;
         return Objects.equals(first, four.first) &&
-                Objects.equals(second, four.second) &&
-                Objects.equals(third, four.third) &&
-                Objects.equals(fourth, four.fourth);
+            Objects.equals(second, four.second) &&
+            Objects.equals(third, four.third) &&
+            Objects.equals(fourth, four.fourth);
     }
 
     @Override
@@ -55,10 +55,10 @@ public class Four<A, B, C, D> {
     @Override
     public String toString() {
         return "Four{" +
-                "first=" + first +
-                ", second=" + second +
-                ", third=" + third +
-                ", fourth=" + fourth +
-                '}';
+            "first=" + first +
+            ", second=" + second +
+            ", third=" + third +
+            ", fourth=" + fourth +
+            '}';
     }
 }

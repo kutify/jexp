@@ -2,25 +2,25 @@ package io.github.kutify.math.expression;
 
 import io.github.kutify.math.api.Constant;
 import io.github.kutify.math.api.Function;
-import io.github.kutify.math.exception.ExpressionSyntaxException;
-import io.github.kutify.math.expression.token.OperandTokenHandler;
-import io.github.kutify.math.expression.token.OperatorTokenHandler;
-import io.github.kutify.math.expression.token.TokenHandler;
-import io.github.kutify.math.expression.token.CommaToken;
-import io.github.kutify.math.expression.token.FunctionTokensWrapper;
-import io.github.kutify.math.expression.token.OperandToken;
-import io.github.kutify.math.expression.token.OperatorToken;
-import io.github.kutify.math.expression.token.OperatorType;
-import io.github.kutify.math.expression.token.ParenthesisToken;
-import io.github.kutify.math.expression.token.Token;
-import io.github.kutify.math.expression.token.TokenType;
 import io.github.kutify.math.exception.ExpressionSyntaxErrorType;
+import io.github.kutify.math.exception.ExpressionSyntaxException;
 import io.github.kutify.math.expression.operand.FunctionOperand;
 import io.github.kutify.math.expression.operand.IBinaryOperand;
 import io.github.kutify.math.expression.operand.IOperand;
 import io.github.kutify.math.expression.operand.ValueOperand;
 import io.github.kutify.math.expression.operand.VarOperand;
 import io.github.kutify.math.expression.operation.Operation;
+import io.github.kutify.math.expression.token.CommaToken;
+import io.github.kutify.math.expression.token.FunctionTokensWrapper;
+import io.github.kutify.math.expression.token.OperandToken;
+import io.github.kutify.math.expression.token.OperandTokenHandler;
+import io.github.kutify.math.expression.token.OperatorToken;
+import io.github.kutify.math.expression.token.OperatorTokenHandler;
+import io.github.kutify.math.expression.token.OperatorType;
+import io.github.kutify.math.expression.token.ParenthesisToken;
+import io.github.kutify.math.expression.token.Token;
+import io.github.kutify.math.expression.token.TokenHandler;
+import io.github.kutify.math.expression.token.TokenType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,33 +50,13 @@ public abstract class AbstractCompiler<T> {
     static final char UNDERSCORE = '_';
 
     private static final OperatorTokenHandler OPERATOR_TOKEN_HANDLER = new OperatorTokenHandler();
-
-    final TokenHandler<FunctionTokensWrapper> functionWrapperTokenHandler;
     protected final Supplier<Map<String, Constant>> constantsProvider;
+    final TokenHandler<FunctionTokensWrapper> functionWrapperTokenHandler;
 
     protected AbstractCompiler(TokenHandler<FunctionTokensWrapper> functionWrapperTokenHandler,
                                Supplier<Map<String, Constant>> constantsProvider) {
         this.functionWrapperTokenHandler = functionWrapperTokenHandler;
         this.constantsProvider = constantsProvider;
-    }
-
-    public ExpressionImpl<T> compile(String expression) {
-        try {
-            List<Token> tokens = infixToPostfix(parseTokens(expression));
-            return new ExpressionImpl<>(
-                generateEvalFunction(
-                    postfixTokensToOperand(tokens)
-                )
-            );
-        } catch (ExpressionSyntaxException ex) {
-            if (ex.getExpression() == null) {
-                throw new ExpressionSyntaxException(expression, ex.getErrorItems());
-            } else {
-                throw ex;
-            }
-        } catch (Exception ex) {
-            throw new ExpressionSyntaxException(expression, ex);
-        }
     }
 
     private static List<Token> parseTokens(String expression) {
@@ -94,8 +74,8 @@ public abstract class AbstractCompiler<T> {
             } else {
                 if (prevWasOperandSymbol) {
                     tokens.add(new OperandToken(
-                            operandStart,
-                            new String(Arrays.copyOfRange(chars, operandStart, i))
+                        operandStart,
+                        new String(Arrays.copyOfRange(chars, operandStart, i))
                     ));
                 }
                 if (symbol != SPACE) {
@@ -122,18 +102,18 @@ public abstract class AbstractCompiler<T> {
             if (tokenType == TokenType.OPERAND) {
                 Token nextToken = i == size - 1 ? null : tokens.get(i + 1);
                 if (nextToken == null ||
-                        !(TokenType.PARENTHESIS.equals(nextToken.getType()) &&
-                                (((ParenthesisToken) nextToken).isOpening()))) {
+                    !(TokenType.PARENTHESIS.equals(nextToken.getType()) &&
+                        (((ParenthesisToken) nextToken).isOpening()))) {
                     result.add(token);
                 } else {
                     List<List<Token>> subTokens = new ArrayList<>();
                     i = 1 + fillFunctionArgs(tokens, i + 1, subTokens);
                     result.add(new FunctionTokensWrapper(
-                            token.getPosition(),
-                            ((OperandToken) token).getValue(),
-                            subTokens.stream()
-                                    .<List<Token>>map(AbstractCompiler::infixToPostfix)
-                                    .collect(Collectors.toList())
+                        token.getPosition(),
+                        ((OperandToken) token).getValue(),
+                        subTokens.stream()
+                            .<List<Token>>map(AbstractCompiler::infixToPostfix)
+                            .collect(Collectors.toList())
                     ));
                 }
             } else if (tokenType == TokenType.OPERATOR) {
@@ -170,7 +150,7 @@ public abstract class AbstractCompiler<T> {
                             }
                         } catch (NoSuchElementException ex) {
                             throw new ExpressionSyntaxException(null, ExpressionSyntaxErrorType.NO_OPENING_PARENTHESIS,
-                                    token.getPosition());
+                                token.getPosition());
                         }
                     }
                 }
@@ -183,11 +163,114 @@ public abstract class AbstractCompiler<T> {
             Token operator = operators.pop();
             if (operator.getType() == TokenType.PARENTHESIS) {
                 throw new ExpressionSyntaxException(null, ExpressionSyntaxErrorType.NO_CLOSING_PARENTHESIS,
-                        operator.getPosition());
+                    operator.getPosition());
             }
             result.add(operator);
         }
         return result;
+    }
+
+    // Returns closing parenthesis position
+    private static int fillFunctionArgs(List<Token> input, int openingParenthesisPos, List<List<Token>> output) {
+        final int size = input.size();
+        List<Token> sublist = new ArrayList<>();
+        int parenthesisCounter = 1;
+        int i = openingParenthesisPos + 1;
+        for (; i < size; i++) {
+            Token token = input.get(i);
+            TokenType tokenType = token.getType();
+            if (TokenType.COMMA.equals(tokenType)) {
+                output.add(sublist);
+                sublist = new ArrayList<>();
+            } else {
+                if (TokenType.PARENTHESIS.equals(tokenType)) {
+                    ParenthesisToken parenthesisToken = (ParenthesisToken) token;
+                    parenthesisCounter += parenthesisToken.isOpening() ? 1 : -1;
+                } else {
+                    sublist.add(token);
+                }
+            }
+            if (parenthesisCounter == 0) {
+                output.add(sublist);
+                break;
+            }
+        }
+        return i;
+    }
+
+    private static List<Token> makeInfixListStrict(List<Token> tokens) {
+        List<Token> result = new ArrayList<>(tokens.size() * 3 / 2);
+        Token prevToken = null;
+        for (Token token : tokens) {
+            if (prevToken == null ||
+                (prevToken.getType() == TokenType.PARENTHESIS && ((ParenthesisToken) prevToken).isOpening())) {
+                if (token.getType() == TokenType.OPERATOR) {
+                    OperatorType operatorType = ((OperatorToken) token).getOperatorType();
+                    if (operatorType == OperatorType.MINUS || operatorType == OperatorType.PLUS) {
+                        result.add(new OperandToken(-1, "0"));
+                    }
+                }
+            } else if (token.getType() == TokenType.OPERAND && prevToken.getType() == TokenType.OPERAND) {
+                result.add(new OperatorToken(token.getPosition(), OperatorType.MULTIPLY));
+            }
+            result.add(token);
+            prevToken = token;
+        }
+        return result;
+    }
+
+    private static Token generateTokenIfPossible(char symbol, int position) {
+        if (symbol == OPENING_PARENTHESIS) {
+            return new ParenthesisToken(position, true);
+        }
+        if (symbol == CLOSING_PARENTHESIS) {
+            return new ParenthesisToken(position, false);
+        }
+        if (symbol == PLUS) {
+            return new OperatorToken(position, OperatorType.PLUS);
+        }
+        if (symbol == MINUS) {
+            return new OperatorToken(position, OperatorType.MINUS);
+        }
+        if (symbol == MULTIPLY) {
+            return new OperatorToken(position, OperatorType.MULTIPLY);
+        }
+        if (symbol == DIVIDE) {
+            return new OperatorToken(position, OperatorType.DIVIDE);
+        }
+        if (symbol == POWER) {
+            return new OperatorToken(position, OperatorType.POWER);
+        }
+        if (symbol == MOD) {
+            return new OperatorToken(position, OperatorType.MOD);
+        }
+        if (symbol == COMMA) {
+            return new CommaToken(position);
+        }
+        return null;
+    }
+
+    private static boolean isOperandPart(char symbol) {
+        return Character.isLetterOrDigit(symbol) || symbol == POINT || symbol == UNDERSCORE;
+    }
+
+    public ExpressionImpl<T> compile(String expression) {
+        try {
+            List<Token> tokens = infixToPostfix(parseTokens(expression));
+            return new ExpressionImpl<>(
+                generateEvalFunction(
+                    postfixTokensToOperand(tokens)
+                )
+            );
+        } catch (ExpressionSyntaxException ex) {
+            if (ex.getExpression() == null) {
+                throw new ExpressionSyntaxException(expression, ex.getErrorItems());
+            } else {
+                throw ex;
+            }
+        } catch (Exception ex) {
+            throw new ExpressionSyntaxException(expression, ex);
+        }
     }
 
     public IOperand postfixTokensToOperand(List<Token> tokens) {
@@ -238,15 +321,15 @@ public abstract class AbstractCompiler<T> {
             FunctionOperand functionOperand = (FunctionOperand) operand;
             Function function = functionOperand.getFunction();
             List<java.util.function.Function<Map<String, T>, T>> funcs = functionOperand
-                    .getArguments()
-                    .stream()
-                    .map(this::generateEvalFunction)
-                    .collect(Collectors.toList());
+                .getArguments()
+                .stream()
+                .map(this::generateEvalFunction)
+                .collect(Collectors.toList());
             return varValues -> applyFunction(
-                    function,
-                    funcs.stream()
-                            .map(func -> func.apply(varValues))
-                            .collect(Collectors.toList())
+                function,
+                funcs.stream()
+                    .map(func -> func.apply(varValues))
+                    .collect(Collectors.toList())
             );
         } else {
             throw new RuntimeException();
@@ -254,95 +337,18 @@ public abstract class AbstractCompiler<T> {
     }
 
     protected abstract OperandTokenHandler<T> getOperandTokenHandler();
+
     protected abstract T plus(T left, T right);
+
     protected abstract T minus(T left, T right);
+
     protected abstract T multiply(T left, T right);
+
     protected abstract T divide(T left, T right);
+
     protected abstract T mod(T left, T right);
+
     protected abstract T pow(T left, T right);
+
     protected abstract T applyFunction(Function function, List<T> args);
-
-    // Returns closing parenthesis position
-    private static int fillFunctionArgs(List<Token> input, int openingParenthesisPos, List<List<Token>> output) {
-        final int size = input.size();
-        List<Token> sublist = new ArrayList<>();
-        int parenthesisCounter = 1;
-        int i = openingParenthesisPos + 1;
-        for (; i < size; i++) {
-            Token token = input.get(i);
-            TokenType tokenType = token.getType();
-            if (TokenType.COMMA.equals(tokenType)) {
-                output.add(sublist);
-                sublist = new ArrayList<>();
-            } else {
-                if (TokenType.PARENTHESIS.equals(tokenType)) {
-                    ParenthesisToken parenthesisToken = (ParenthesisToken) token;
-                    parenthesisCounter += parenthesisToken.isOpening() ? 1 : -1;
-                } else {
-                    sublist.add(token);
-                }
-            }
-            if (parenthesisCounter == 0) {
-                output.add(sublist);
-                break;
-            }
-        }
-        return i;
-    }
-
-    private static List<Token> makeInfixListStrict(List<Token> tokens) {
-        List<Token> result = new ArrayList<>(tokens.size() * 3 / 2);
-        Token prevToken = null;
-        for (Token token : tokens) {
-            if (prevToken == null ||
-                    (prevToken.getType() == TokenType.PARENTHESIS && ((ParenthesisToken) prevToken).isOpening())) {
-                if (token.getType() == TokenType.OPERATOR) {
-                    OperatorType operatorType = ((OperatorToken) token).getOperatorType();
-                    if (operatorType == OperatorType.MINUS || operatorType == OperatorType.PLUS) {
-                        result.add(new OperandToken(-1, "0"));
-                    }
-                }
-            } else if (token.getType() == TokenType.OPERAND && prevToken.getType() == TokenType.OPERAND) {
-                result.add(new OperatorToken(token.getPosition(), OperatorType.MULTIPLY));
-            }
-            result.add(token);
-            prevToken = token;
-        }
-        return result;
-    }
-
-    private static Token generateTokenIfPossible(char symbol, int position) {
-        if (symbol == OPENING_PARENTHESIS) {
-            return new ParenthesisToken(position, true);
-        }
-        if (symbol == CLOSING_PARENTHESIS) {
-            return new ParenthesisToken(position, false);
-        }
-        if (symbol == PLUS) {
-            return new OperatorToken(position, OperatorType.PLUS);
-        }
-        if (symbol == MINUS) {
-            return new OperatorToken(position, OperatorType.MINUS);
-        }
-        if (symbol == MULTIPLY) {
-            return new OperatorToken(position, OperatorType.MULTIPLY);
-        }
-        if (symbol == DIVIDE) {
-            return new OperatorToken(position, OperatorType.DIVIDE);
-        }
-        if (symbol == POWER) {
-            return new OperatorToken(position, OperatorType.POWER);
-        }
-        if (symbol == MOD) {
-            return new OperatorToken(position, OperatorType.MOD);
-        }
-        if (symbol == COMMA) {
-            return new CommaToken(position);
-        }
-        return null;
-    }
-
-    private static boolean isOperandPart(char symbol) {
-        return Character.isLetterOrDigit(symbol) || symbol == POINT || symbol == UNDERSCORE;
-    }
 }

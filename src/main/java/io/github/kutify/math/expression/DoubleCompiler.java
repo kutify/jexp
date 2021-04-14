@@ -2,9 +2,9 @@ package io.github.kutify.math.expression;
 
 import io.github.kutify.math.api.Constant;
 import io.github.kutify.math.api.Function;
+import io.github.kutify.math.expression.token.FunctionTokensWrapper;
 import io.github.kutify.math.expression.token.OperandTokenHandler;
 import io.github.kutify.math.expression.token.TokenHandler;
-import io.github.kutify.math.expression.token.FunctionTokensWrapper;
 
 import java.util.List;
 import java.util.Map;
@@ -62,8 +62,8 @@ public class DoubleCompiler extends AbstractCompiler<Double> {
     @Override
     protected Double pow(Double left, Double right) {
         if (left < 0 && Math.floor(right) != right) {
-            throw new ArithmeticException("Forbidden operation: negative " + left +" to the power of non integer " +
-                    right);
+            throw new ArithmeticException("Forbidden operation: negative " + left + " to the power of non integer " +
+                right);
         }
         return Math.pow(left, right);
     }

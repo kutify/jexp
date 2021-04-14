@@ -135,10 +135,15 @@ public class ArgumentsImpl<T> implements Arguments<T> {
         }
 
         protected abstract T cast(long value);
+
         protected abstract T cast(double value);
+
         protected abstract T cast(BigInteger value);
+
         protected abstract T cast(BigDecimal value);
+
         protected abstract T cast(BigRational value);
+
         protected abstract T cast(String value);
     }
 }

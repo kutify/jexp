@@ -49,6 +49,10 @@ public class JExp {
             .forEach(DEFAULT_FACTORY::register);
     }
 
+    private JExp() {
+        throw new UnsupportedOperationException();
+    }
+
     public static void register(Function function) {
         DEFAULT_FACTORY.register(function);
     }
@@ -121,12 +125,5 @@ public class JExp {
 
     public static Arguments<BigRational> rationalArgs(Map<String, BigRational> args) {
         return () -> args;
-    }
-
-
-    // --------------------------------------------------------------------------------------------
-
-    private JExp() {
-        throw new UnsupportedOperationException();
     }
 }

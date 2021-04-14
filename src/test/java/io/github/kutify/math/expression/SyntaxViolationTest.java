@@ -17,6 +17,19 @@ import static org.junit.jupiter.params.provider.Arguments.of;
 
 class SyntaxViolationTest {
 
+    private static Stream<Arguments> getTestData() {
+        return Stream.of(
+            of("(a", "closing parenthesis not found at '(' (pos. 0)"),
+            of("()", "some unrecognized errors"),
+            of("1 + ()", "wrong syntax around operator at '+' (pos. 2)"),
+            of("1 + ", "wrong syntax around operator at '+' (pos. 2)"),
+            of(")", "opening parenthesis not found at ')' (pos. 0)"),
+            of("a)", "opening parenthesis not found at ')' (pos. 1)"),
+            of("1 + qwerty(123)", "undefined function at 'q' (pos. 4)"),
+            of("1 + sqrt(1,2)", "wrong function arguments number at 's' (pos. 4)")
+        );
+    }
+
     @Test
     void test() {
         Arguments a = getTestData().collect(Collectors.toList()).get(3);
@@ -27,8 +40,8 @@ class SyntaxViolationTest {
     @MethodSource("getTestData")
     void test(String expression, String expectedMessage) {
         Throwable throwable = assertThrows(
-                ExpressionSyntaxException.class,
-                () -> JExp.compileDouble(expression)
+            ExpressionSyntaxException.class,
+            () -> JExp.compileDouble(expression)
         );
         String actualMessage = throwable.getMessage();
 
@@ -36,18 +49,5 @@ class SyntaxViolationTest {
         assertEquals(0, actualMessage.indexOf(expectedMessageStart), "Got: " + actualMessage);
 
         assertTrue(actualMessage.contains(expectedMessage), "Got: " + actualMessage);
-    }
-
-    private static Stream<Arguments> getTestData() {
-        return Stream.of(
-                of("(a", "closing parenthesis not found at '(' (pos. 0)"),
-                of("()", "some unrecognized errors"),
-                of("1 + ()", "wrong syntax around operator at '+' (pos. 2)"),
-                of("1 + ", "wrong syntax around operator at '+' (pos. 2)"),
-                of(")", "opening parenthesis not found at ')' (pos. 0)"),
-                of("a)", "opening parenthesis not found at ')' (pos. 1)"),
-                of("1 + qwerty(123)", "undefined function at 'q' (pos. 4)"),
-                of("1 + sqrt(1,2)", "wrong function arguments number at 's' (pos. 4)")
-        );
     }
 }
