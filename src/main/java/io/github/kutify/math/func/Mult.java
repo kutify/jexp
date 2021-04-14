@@ -1,6 +1,6 @@
 package io.github.kutify.math.func;
 
-import io.github.kutify.math.expression.Function;
+import io.github.kutify.math.api.Function;
 import io.github.kutify.math.number.BigRational;
 
 import java.util.List;

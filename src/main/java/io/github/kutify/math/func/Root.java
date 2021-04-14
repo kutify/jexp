@@ -4,22 +4,22 @@ import io.github.kutify.math.number.BigRational;
 
 import java.math.BigInteger;
 
-public class Sqrt extends OneArgFunction {
+public class Root extends OneArgFunction {
 
-    private static final BigRational HALF = new BigRational(BigInteger.ONE, BigInteger.valueOf(2));
+    private static final BigRational ONE_THIRD = new BigRational(BigInteger.ONE, BigInteger.valueOf(3));
 
     @Override
     public String getName() {
-        return "sqrt";
+        return "root";
     }
 
     @Override
     BigRational applySingle(BigRational argValue) {
-        return argValue.pow(HALF);
+        return argValue.pow(ONE_THIRD);
     }
 
     @Override
     Double applySingle(Double argValue) {
-        return Math.sqrt(argValue);
+        return Math.cbrt(argValue);
     }
 }

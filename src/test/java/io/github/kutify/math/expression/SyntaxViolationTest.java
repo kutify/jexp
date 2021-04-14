@@ -1,5 +1,6 @@
 package io.github.kutify.math.expression;
 
+import io.github.kutify.math.api.JExp;
 import io.github.kutify.math.exception.ExpressionSyntaxException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,7 +28,7 @@ class SyntaxViolationTest {
     void test(String expression, String expectedMessage) {
         Throwable throwable = assertThrows(
                 ExpressionSyntaxException.class,
-                () -> Expression.compileDouble(expression)
+                () -> JExp.compileDouble(expression)
         );
         String actualMessage = throwable.getMessage();
 

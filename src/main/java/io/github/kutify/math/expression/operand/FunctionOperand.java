@@ -1,6 +1,6 @@
 package io.github.kutify.math.expression.operand;
 
-import io.github.kutify.math.expression.Function;
+import io.github.kutify.math.api.Function;
 import io.github.kutify.math.expression.operation.Operation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
